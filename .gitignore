@@ -1,0 +1,10 @@
+# 設計稿與列印用文件（不納入版本控制）
+*.pdf
+*.pptx
+*.ai
+*.JPG
+*.jpg
+減重病歷.txt
+
+# macOS
+.DS_Store

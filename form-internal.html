@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>安安診所 掛號單（內科）</title>
+<link rel="stylesheet" href="styles.css?v=7">
+<style id="page-size">@page { size: A5 landscape; margin: 0; }</style>
+</head>
+<body class="a5">
+
+<!-- ============ 操作列（列印時自動隱藏） ============ -->
+<div class="toolbar">
+  <strong>內科掛號單</strong>
+  <span class="group">
+    <label>尺寸：</label>
+    <button type="button" data-mode="a5" class="primary">A5 單張</button>
+    <button type="button" data-mode="a4-duo">A4 雙拼</button>
+  </span>
+  <span class="group">
+    <button type="button" id="btn-pdf" class="primary">下載 PDF</button>
+    <button type="button" class="danger" id="btn-reset">還原預設內容</button>
+  </span>
+  <span class="hint">📝 任一欄位文字都可直接點選修改，會自動儲存於本瀏覽器</span>
+</div>
+
+<!--
+  ============ 表單內容模板 ============
+  想永久修改預設文字：改下面 <template> 內的內容即可（兩份副本自動同步）
+  想在不改檔案的前提下修改：直接在瀏覽器畫面上點選文字編輯
+-->
+<template id="form-body">
+  <!-- ----- 左側存根聯 ----- -->
+  <aside class="stub">
+    <div class="room-badge">
+      <span class="room-no editable" data-k="room-no">1 診</span>
+      <span class="room-label editable" data-k="room-label">Room</span>
+    </div>
+    <div class="stub-box"><span class="editable" data-k="stub-1">號碼</span></div>
+    <div class="stub-box"><span class="editable" data-k="stub-2">日期</span></div>
+  </aside>
+
+  <!-- ----- 右側主內容 ----- -->
+  <section class="main">
+
+    <!-- 基本量測：體溫 / 體重 / 血壓（原版三格） -->
+    <div class="metric-row">
+      <div class="metric"><span class="editable" data-k="m1">體溫</span></div>
+      <div class="metric"><span class="editable" data-k="m2">體重</span></div>
+      <div class="metric"><span class="editable" data-k="m3">血壓</span></div>
+    </div>
+
+    <!-- 基本資訊：藥物過敏 + 懷孕哺乳（原版） -->
+    <div class="info-group">
+      <div class="info-row">
+        <span class="label"><span class="editable" data-k="lbl-allergy">藥物過敏</span></span>
+        <span class="colon">：</span>
+        <label><span class="chk"></span><span class="editable" data-k="a1">無</span></label>
+        <label><span class="chk"></span><span class="editable" data-k="a2">有</span></label>
+        <span class="blank"></span>
+      </div>
+      <div class="info-row">
+        <span class="label"><span class="editable" data-k="lbl-pregnant">懷孕哺乳</span></span>
+        <span class="colon">：</span>
+        <label><span class="chk"></span><span class="editable" data-k="pg1">無</span></label>
+        <label><span class="chk"></span><span class="editable" data-k="pg2">有</span></label>
+      </div>
+    </div>
+
+    <!-- 今天就診主因（3 欄 × 2 列，其他 與上方欄位對齊） -->
+    <div class="section-title">
+      <span class="editable" data-k="t-reason">今天就診主因</span>
+      <span class="en editable" data-k="t-reason-en">Visit Reason</span>
+    </div>
+    <ul class="checklist grid-3">
+      <li><span class="chk"></span><span class="editable" data-k="r1">慢性病追蹤</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="r2">減重諮詢</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="r3">健康檢查</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="r4">感冒不適</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="r5">傷口處理</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="r6">其他</span>
+        <span class="inline-blank"></span>
+      </li>
+    </ul>
+
+    <!-- 感冒／急性症狀 -->
+    <div class="section-title">
+      <span class="editable" data-k="t-symptom">感冒／急性症狀</span>
+      <span class="en editable" data-k="t-symptom-en">Acute Symptoms (if any)</span>
+    </div>
+    <ul class="checklist spread">
+      <li><span class="chk"></span><span class="editable" data-k="s1">發燒</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="s2">咳嗽</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="s3">鼻水</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="s5">嘔吐</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="s6">腹瀉</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="s7">腹痛</span></li>
+    </ul>
+
+    <!-- 特殊需求 -->
+    <div class="section-title">
+      <span class="editable" data-k="t-special">特殊需求</span>
+      <span class="en editable" data-k="t-special-en">Special Requests</span>
+    </div>
+    <ul class="special-list">
+      <li><span class="chk"></span><span class="editable" data-k="sp1">排斥吃太多藥，請給我基本緩解症狀的藥物</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="sp2">我想要自費點滴，加強治療效果</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="sp3">不介意吃重一點的藥，盡快控制好症狀</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="sp4">我很害怕局部治療，請不要在我的鼻腔或口腔噴藥</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="sp5">孩子敢吃苦藥，請維持原味藥粉</span></li>
+    </ul>
+
+  </section>
+</template>
+
+<!-- ============ 渲染區 ============ -->
+<main id="sheet-container">
+  <div class="a4-sheet">
+    <article class="form-page" data-form></article>
+    <article class="form-page" data-form></article>
+  </div>
+</main>
+
+<script src="assets/html2pdf.bundle.min.js"></script>
+<script src="editor.js?v=10"></script>
+<script>
+  initForm({ formId: 'internal' });
+</script>
+</body>
+</html>

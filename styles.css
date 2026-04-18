@@ -1,0 +1,440 @@
+/* ==========================================================================
+   安安診所掛號單 樣式
+   - 預設：A5 橫向單張
+   - body.a4-duo：A4 直向，上下兩份 A5 表單（裁切用）
+   - 所有項目皆 contenteditable，滑鼠移到文字上會顯示編輯框
+   ========================================================================== */
+
+/* ---------- 變數集中管理（想調整版面改這裡就好） ---------- */
+:root {
+  --ink: #222;
+  --ink-soft: #5a5246;
+  --line: #222;
+  --ink-subtle: #888;        /* 區塊副標/英文小字 */
+  --box-radius: 1mm;
+  --stub-width: 48mm;
+  --gap: 2.2mm;
+
+  /* 頁面內距（四周影印安全邊 / 出血保留區） */
+  --page-pad-x: 7mm;
+  --page-pad-y: 5mm;
+
+  /* 字級 */
+  --fs-body: 13pt;
+  --fs-label: 12pt;
+  --fs-small: 11pt;
+  --fs-title: 12pt;
+  --fs-sublabel: 7.5pt;      /* 區塊英文副標 */
+  --fs-stub: 15pt;
+
+  /* checkbox 方框尺寸 */
+  --chk-size: 4mm;
+
+  /* 框線粗細（優雅細線派：0.5pt 是印刷機可靠印出的最細線） */
+  --line-weight: 0.5pt;
+  --line-weight-thick: 0.75pt;
+}
+
+/* ---------- 通用重設 ---------- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: "PingFang TC", "Noto Sans TC", "Microsoft JhengHei",
+               "Heiti TC", "Hiragino Sans", sans-serif;
+  color: var(--ink);
+  font-size: var(--fs-body);
+  line-height: 1.3;
+  -webkit-font-smoothing: antialiased;
+  background: #e8e8e8;
+}
+
+/* ---------- 單張表單容器：A5 橫向 ---------- */
+.form-page {
+  width: 210mm;
+  height: 148mm;
+  padding: var(--page-pad-y) var(--page-pad-x);
+  background: #fff;
+  display: flex;
+  gap: 3mm;
+  position: relative;
+  page-break-after: always;
+  break-after: page;
+  overflow: hidden;
+}
+
+/* 背景浮水印 logo（放大版）
+   以 data URI 內嵌：從 file:// 載入時 html2canvas 若遇外部圖片會把 canvas
+   標記為 tainted、造成 SecurityError，導致「下載 PDF」失敗。
+   data URI 屬同源，不會污染 canvas。 */
+.form-page::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/png;base64,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");
+  background-repeat: no-repeat;
+  background-position: 65% 55%;
+  background-size: 105mm auto;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---------- 存根聯（號碼 / 日期） ---------- */
+.stub {
+  width: var(--stub-width);
+  flex: 0 0 var(--stub-width);
+  border-right: var(--line-weight) solid var(--ink);
+  padding-right: 3mm;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  position: relative;
+  z-index: 1;
+}
+
+/* 診別標籤（1 診 / 2 診） */
+.room-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 2mm;
+  padding-bottom: 1mm;
+  border-bottom: var(--line-weight) solid var(--ink);
+  letter-spacing: 1.5pt;
+}
+.room-badge .room-no {
+  font-size: 20pt;
+  font-weight: 600;
+  line-height: 1;
+  padding-left: 4mm;
+}
+.room-badge .room-label {
+  font-size: var(--fs-sublabel);
+  color: var(--ink-subtle);
+  letter-spacing: 1.5pt;
+  text-transform: uppercase;
+  margin-left: auto;
+}
+
+.stub-box {
+  flex: 1;
+  border: var(--line-weight-thick) solid var(--ink);
+  border-radius: var(--box-radius);
+  padding: 3mm 3mm;
+  font-size: var(--fs-stub);
+  font-weight: 500;
+  letter-spacing: 1pt;
+}
+
+/* ---------- 右側主區 ---------- */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 讓各區塊平均分布滿整頁高度 */
+  gap: var(--gap);
+  padding-left: 2mm;
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+/* 頂部量測小方框 */
+.metric-row {
+  display: flex;
+  gap: 3mm;
+  flex-wrap: wrap;
+}
+.metric {
+  flex: 1 1 0;
+  min-width: 18mm;
+  border: var(--line-weight-thick) solid var(--ink);
+  border-radius: var(--box-radius);
+  padding: 2mm 3mm;
+  height: 22mm;
+  font-size: 13pt;
+  font-weight: 500;
+  letter-spacing: 0.5pt;
+}
+
+/* 基本資訊群組方框 */
+.info-group {
+  border: var(--line-weight-thick) solid var(--ink);
+  border-radius: var(--box-radius);
+  padding: 3mm 4mm;
+  display: flex;
+  flex-direction: column;
+  gap: 3.5mm;
+}
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 4mm;
+  white-space: nowrap;
+  font-size: var(--fs-label);
+}
+.info-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 1mm;
+}
+.info-row .label {
+  display: inline-block;
+  width: 18mm;
+  min-width: 18mm;
+  font-weight: 500;
+  /* 只讓中文字均分撐滿寬度（冒號另外獨立） */
+  text-align: justify;
+  text-align-last: justify;
+}
+.info-row .label .editable {
+  display: inline-block;
+  width: 100%;
+  text-align: justify;
+  text-align-last: justify;
+}
+.info-row .colon {
+  display: inline-block;
+  margin: 0 1mm 0 0;
+  font-weight: 500;
+}
+.info-row .blank {
+  flex: 1;
+  border-bottom: var(--line-weight) solid var(--ink);
+  min-width: 20mm;
+  margin-left: 1mm;
+  align-self: flex-end;
+  height: 1.3em;
+}
+
+/* 區塊標題（優雅編輯體：字距加寬 + 細淺色底線） */
+.section-title {
+  font-size: var(--fs-title);
+  font-weight: 600;
+  margin: 0;
+  color: var(--ink);
+  letter-spacing: 1.2pt;
+  border-bottom: var(--line-weight) solid var(--ink);
+  padding-bottom: 1mm;
+  display: flex;
+  align-items: baseline;
+  gap: 2mm;
+}
+.section-title .en {
+  font-size: var(--fs-sublabel);
+  font-weight: 400;
+  letter-spacing: 1.5pt;
+  color: var(--ink-subtle);
+  text-transform: uppercase;
+}
+
+/* 選項排列（多欄 wrap） */
+.checklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2.5mm 4mm;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.checklist li {
+  display: inline-flex;
+  align-items: center;
+  gap: 1mm;
+  font-size: var(--fs-label);
+  white-space: nowrap;
+}
+
+/* 固定 N 欄 grid（讓每列 checkbox 上下對齊） */
+.checklist.grid-3,
+.checklist.grid-4 {
+  display: grid;
+  gap: 4mm 3mm;
+}
+.checklist.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.checklist.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+.checklist.grid-3 li,
+.checklist.grid-4 li {
+  display: flex;
+  min-width: 0;
+}
+.checklist.grid-3 .inline-blank,
+.checklist.grid-4 .inline-blank {
+  flex: 1;
+  min-width: 0;
+}
+/* 整列跨欄（例如「其他 _______」獨佔一行） */
+.checklist li.full-row {
+  grid-column: 1 / -1;
+}
+
+/* 均分分布：各項平均散開填滿整列寬度 */
+.checklist.spread {
+  justify-content: space-between;
+}
+
+/* 自繪方框 checkbox */
+.chk {
+  display: inline-block;
+  width: var(--chk-size);
+  height: var(--chk-size);
+  border: var(--line-weight) solid var(--ink);
+  border-radius: 0.6mm;
+  margin-right: 1mm;
+  vertical-align: -0.8mm;
+  flex: 0 0 auto;
+}
+
+/* 特殊需求（一條一行；行距拉寬方便手寫打勾） */
+.special-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2.2mm;
+}
+.special-list li {
+  font-size: var(--fs-label);
+  display: flex;
+  align-items: center;
+  gap: 1mm;
+}
+
+/* 空白線（給「有 ____」這種） */
+.inline-blank {
+  display: inline-block;
+  border-bottom: var(--line-weight) solid var(--ink);
+  min-width: 22mm;
+  height: 1.2em;
+  margin: 0 1mm;
+}
+
+/* ---------- contenteditable 視覺提示（螢幕上可見，列印時隱藏） ---------- */
+.editable {
+  padding: 0 1mm;
+  border-radius: 1mm;
+  transition: background 0.1s ease;
+}
+.editable:hover {
+  background: rgba(255, 220, 100, 0.28);
+  outline: 1px dashed #bba98a;
+  outline-offset: 1px;
+  cursor: text;
+}
+.editable:focus {
+  background: rgba(255, 220, 100, 0.45);
+  outline: 1px solid var(--ink-soft);
+  outline-offset: 1px;
+}
+
+/* ---------- A4 雙拼模式 ---------- */
+body.a4-duo .a4-sheet {
+  width: 210mm;
+  height: 297mm;
+  background: #fff;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  page-break-after: always;
+  break-after: page;
+}
+body.a4-duo .a4-sheet .form-page {
+  width: 210mm;
+  height: 148mm;
+  page-break-after: auto;
+  break-after: auto;
+}
+body.a4-duo .a4-sheet::after {
+  content: "";
+  position: absolute;
+  left: 3mm;
+  right: 3mm;
+  top: 148mm;
+  border-top: 0.3pt dashed #888;
+  pointer-events: none;
+}
+
+/* A5 模式：只顯示一份，隱藏第二份 */
+body.a5 .a4-sheet { width: auto; height: auto; }
+body.a5 .a4-sheet > .form-page:nth-child(2) { display: none; }
+body.a5 .a4-sheet::after { display: none; }
+body.a5 .form-page {
+  margin: 20px auto;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+body.a4-duo .a4-sheet {
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* ---------- 列印設定 ---------- */
+@media print {
+  body { background: #fff; }
+  body.a5 .form-page { margin: 0; box-shadow: none; }
+  body.a4-duo .a4-sheet { margin: 0; box-shadow: none; }
+
+  .editable:hover, .editable:focus {
+    background: transparent !important;
+    outline: none !important;
+  }
+
+  @page {
+    size: A5 landscape;
+    margin: 0;
+  }
+}
+
+/* ---------- 操作列（index / form 共用） ---------- */
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 16px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+.toolbar .group {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.toolbar label { color: #555; }
+.toolbar button, .toolbar select {
+  padding: 6px 12px;
+  border: 1px solid #bbb;
+  background: #fafafa;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.toolbar button:hover { background: #f0f0f0; }
+.toolbar button.primary {
+  background: #5a5246;
+  color: #fff;
+  border-color: #5a5246;
+}
+.toolbar button.primary:hover { background: #423c32; }
+.toolbar button.danger {
+  border-color: #c78b7a;
+  color: #a6412e;
+}
+.toolbar button.danger:hover {
+  background: #fbeeea;
+}
+
+.hint {
+  color: #888;
+  font-size: 12px;
+  margin-left: auto;
+}
+
+@media print {
+  .toolbar { display: none; }
+}

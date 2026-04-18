@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>安安診所 掛號單（婦產科）</title>
+<link rel="stylesheet" href="styles.css?v=8">
+<style id="page-size">@page { size: A5 landscape; margin: 0; }</style>
+</head>
+<body class="a5">
+
+<!-- ============ 操作列（列印時自動隱藏） ============ -->
+<div class="toolbar">
+  <strong>婦產科掛號單</strong>
+  <span class="group">
+    <label>尺寸：</label>
+    <button type="button" data-mode="a5" class="primary">A5 單張</button>
+    <button type="button" data-mode="a4-duo">A4 雙拼</button>
+  </span>
+  <span class="group">
+    <button type="button" id="btn-pdf" class="primary">下載 PDF</button>
+    <button type="button" class="danger" id="btn-reset">還原預設內容</button>
+  </span>
+  <span class="hint">📝 任一欄位文字都可直接點選修改，會自動儲存於本瀏覽器</span>
+</div>
+
+<template id="form-body">
+  <aside class="stub">
+    <div class="room-badge">
+      <span class="room-no editable" data-k="room-no">2 診</span>
+      <span class="room-label editable" data-k="room-label">Room</span>
+    </div>
+    <div class="stub-box"><span class="editable" data-k="stub-1">號碼</span></div>
+    <div class="stub-box"><span class="editable" data-k="stub-2">日期</span></div>
+  </aside>
+
+  <section class="main">
+
+    <!-- 基本資訊 -->
+    <div class="info-group">
+      <div class="info-row">
+        <span class="label"><span class="editable" data-k="lbl-allergy">藥物過敏</span></span>
+        <span class="colon">：</span>
+        <label><span class="chk"></span><span class="editable" data-k="a1">無</span></label>
+        <label><span class="chk"></span><span class="editable" data-k="a2">有</span></label>
+        <span class="blank"></span>
+      </div>
+      <div class="info-row">
+        <span class="label"><span class="editable" data-k="lbl-pregnant">懷孕狀態</span></span>
+        <span class="colon">：</span>
+        <label><span class="chk"></span><span class="editable" data-k="p1">無</span></label>
+        <label><span class="chk"></span><span class="editable" data-k="p2">有</span></label>
+        <span style="margin-left:1mm"><span class="editable" data-k="p3">約</span></span>
+        <span class="inline-blank" style="min-width:16mm"></span>
+        <span><span class="editable" data-k="p4">週</span></span>
+      </div>
+      <div class="info-row">
+        <span class="label"><span class="editable" data-k="lbl-breast">哺乳狀態</span></span>
+        <span class="colon">：</span>
+        <label><span class="chk"></span><span class="editable" data-k="b1">無</span></label>
+        <label><span class="chk"></span><span class="editable" data-k="b2">有</span></label>
+      </div>
+      <div class="info-row">
+        <span class="label"><span class="editable" data-k="lbl-sex">性經驗</span></span>
+        <span class="colon">：</span>
+        <label><span class="chk"></span><span class="editable" data-k="x1">無</span></label>
+        <label><span class="chk"></span><span class="editable" data-k="x2">有</span></label>
+      </div>
+    </div>
+
+    <!-- 今天需要協助的項目（4 欄 × 2 列 + 其他獨佔一行，對齊優雅） -->
+    <div class="section-title">
+      <span class="editable" data-k="t-help">今天需要協助的項目</span>
+      <span class="en editable" data-k="t-help-en">Today's Concern</span>
+    </div>
+    <ul class="checklist grid-4">
+      <li><span class="chk"></span><span class="editable" data-k="h1">例行產檢</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="h2">陰道出血</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="h3">下腹疼痛</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="h4">胎動減少</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="h5">搔癢異味</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="h6">月經問題</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="h7">頻尿刺激</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="h8">抹片檢查</span></li>
+      <li class="full-row"><span class="chk"></span><span class="editable" data-k="h9">其他問題</span>
+        <span class="inline-blank"></span>
+      </li>
+    </ul>
+
+    <!-- 特殊需求 -->
+    <div class="section-title">
+      <span class="editable" data-k="t-special">特殊需求</span>
+      <span class="en editable" data-k="t-special-en">Special Requests</span>
+    </div>
+    <ul class="special-list">
+      <li><span class="chk"></span><span class="editable" data-k="sp1">我想使用自費拋棄式鴨嘴</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="sp2">我對內診比較緊張，請檢查前多給我一點心理準備</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="sp3">我想了解自費項目（原廠藥物／疫苗／檢查）</span></li>
+      <li><span class="chk"></span><span class="editable" data-k="sp4">我正在準備懷孕，想諮詢孕前檢查與優生保健</span></li>
+    </ul>
+
+  </section>
+</template>
+
+<main id="sheet-container">
+  <div class="a4-sheet">
+    <article class="form-page" data-form></article>
+    <article class="form-page" data-form></article>
+  </div>
+</main>
+
+<script src="assets/html2pdf.bundle.min.js"></script>
+<script src="editor.js?v=10"></script>
+<script>
+  initForm({ formId: 'obgyn' });
+</script>
+</body>
+</html>

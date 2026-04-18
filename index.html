@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>安安診所 掛號單</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  body {
+    background: #f3efe9;
+    min-height: 100vh;
+    margin: 0;
+    font-family: "PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+  }
+  .landing {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+    color: #2a2a2a;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .brand img { height: 56px; }
+  .brand h1 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 500;
+    color: #4a4030;
+  }
+  .brand small {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #8a7d65;
+  }
+  .intro {
+    color: #555;
+    font-size: 14.5px;
+    line-height: 1.8;
+    margin: 0 0 32px;
+  }
+  .intro code {
+    background: #e9e3d6;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 13px;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 600px) {
+    .card-grid { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #e2dcce;
+    border-radius: 10px;
+    padding: 22px 22px 20px;
+    box-shadow: 0 2px 8px rgba(80,70,40,0.06);
+  }
+  .card h2 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    color: #4a4030;
+  }
+  .card p {
+    margin: 0 0 16px;
+    font-size: 13px;
+    color: #6c6558;
+    line-height: 1.6;
+  }
+  .card .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .card a {
+    flex: 1;
+    text-align: center;
+    padding: 9px 12px;
+    font-size: 14px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid #bba98a;
+    color: #4a4030;
+    background: #faf7f1;
+    white-space: nowrap;
+  }
+  .card a.primary {
+    background: #5a5246;
+    color: #fff;
+    border-color: #5a5246;
+  }
+  .card a:hover { filter: brightness(0.97); }
+
+  .footer-hint {
+    margin-top: 32px;
+    font-size: 12.5px;
+    color: #8a7d65;
+    line-height: 1.75;
+    border-top: 1px solid #e2dcce;
+    padding-top: 18px;
+  }
+</style>
+</head>
+<body>
+
+<div class="landing">
+
+  <div class="brand">
+    <img src="assets/logo-horizontal.png" alt="安安診所 ANAN WALK-IN CLINIC">
+  </div>
+
+  <p class="intro">
+    點下方卡片開啟掛號單。進到頁面後，可以用右上角按鈕切換
+    <code>A5 單張</code> 或 <code>A4 雙拼</code>（A4 上下各印一份，列印後沿中線裁切）。<br>
+    要存成 PDF：按 <code>⌘P</code>（Mac）或 <code>Ctrl+P</code>（Windows）→ 目的地選「另存為 PDF」。
+  </p>
+
+  <div class="card-grid">
+
+    <div class="card">
+      <h2>內科掛號單</h2>
+      <p>體溫 / 體重 / 血壓、藥物過敏、主要症狀、特殊需求。</p>
+      <div class="actions">
+        <a href="form-internal.html?mode=a5" class="primary">A5 單張</a>
+        <a href="form-internal.html?mode=a4-duo">A4 雙拼</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>婦產科掛號單</h2>
+      <p>藥物過敏、懷孕／哺乳／性經驗、需求項目、特殊需求。</p>
+      <div class="actions">
+        <a href="form-obgyn.html?mode=a5" class="primary">A5 單張</a>
+        <a href="form-obgyn.html?mode=a4-duo">A4 雙拼</a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-hint">
+    要修改選項文字 / 新增特殊需求：請用文字編輯器開啟
+    <code>form-internal.html</code> 或 <code>form-obgyn.html</code>，找到
+    <code>&lt;template id="form-body"&gt;</code> 區塊，複製任一行 <code>&lt;li&gt;...&lt;/li&gt;</code>
+    並修改即可，兩份副本會自動同步。<br>
+    要微調版面寬度 / 字級：修改 <code>styles.css</code> 開頭 <code>:root</code> 內的變數。
+  </div>
+</div>
+
+</body>
+</html>
