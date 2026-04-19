@@ -92,7 +92,18 @@ function initForm({ formId }) {
     b.addEventListener('click', () => setMode(b.dataset.mode));
   });
 
-  // 9) 支援 ?mode=a4-duo / ?mode=a5 直接進入指定模式
+  // 9a) 浮水印濃度滑桿
+  const wmSlider = document.getElementById('watermark-opacity');
+  const wmLabel  = document.getElementById('watermark-opacity-label');
+  if (wmSlider) {
+    wmSlider.addEventListener('input', () => {
+      const pct = wmSlider.value;
+      document.documentElement.style.setProperty('--watermark-opacity', pct / 100);
+      wmLabel.textContent = pct + '%';
+    });
+  }
+
+  // 9b) 支援 ?mode=a4-duo / ?mode=a5 直接進入指定模式
   const urlMode = new URLSearchParams(location.search).get('mode');
   if (urlMode === 'a4-duo' || urlMode === 'a5') setMode(urlMode);
 

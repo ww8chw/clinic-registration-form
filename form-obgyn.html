@@ -6,7 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>安安診所 掛號單（婦產科）</title>
-<link rel="stylesheet" href="styles.css?v=8">
+<link rel="stylesheet" href="styles.css?v=9">
 <style id="page-size">@page { size: A5 landscape; margin: 0; }</style>
 </head>
 <body class="a5">
@@ -22,6 +22,11 @@
   <span class="group">
     <button type="button" id="btn-pdf" class="primary">下載 PDF</button>
     <button type="button" class="danger" id="btn-reset">還原預設內容</button>
+  </span>
+  <span class="group">
+    <label>浮水印：<span id="watermark-opacity-label">8%</span></label>
+    <input id="watermark-opacity" type="range" min="0" max="30" value="8" step="1"
+           style="width:80px;vertical-align:middle">
   </span>
   <span class="hint">📝 任一欄位文字都可直接點選修改，會自動儲存於本瀏覽器</span>
 </div>
@@ -112,7 +117,7 @@
 </main>
 
 <script src="assets/html2pdf.bundle.min.js"></script>
-<script src="editor.js?v=10"></script>
+<script src="editor.js?v=11"></script>
 <script>
   initForm({ formId: 'obgyn' });
 </script>
